@@ -8,6 +8,9 @@ public:
 	Enemy(float x, float y, Game* game);
 	void update();
 	void draw() override;
+	void takeLife();
+	bool isDead();
+	int life = 3;
 
 	Animation* aMoving;
 	Animation* animation;

@@ -21,3 +21,13 @@ void Enemy::update() {
 void Enemy::draw() {
 	animation->draw(x, y);
 }
+
+bool Enemy::isDead() {
+	return life == 0;
+}
+
+void Enemy::takeLife() {
+	life--;
+}
+
+

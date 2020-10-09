@@ -161,6 +161,7 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
 			if (enemy->isOverlap(projectile)) {
+				enemy->takeLife();
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end();
@@ -168,17 +169,20 @@ void GameLayer::update() {
 				if (!pInList) {
 					deleteProjectiles.push_back(projectile);
 				}
+				if (enemy->isDead()) {
+					bool eInList = std::find(deleteEnemies.begin(),
+						deleteEnemies.end(),
+						enemy) != deleteEnemies.end();
 
-				bool eInList = std::find(deleteEnemies.begin(),
-					deleteEnemies.end(),
-					enemy) != deleteEnemies.end();
+					if (!eInList) {
+						deleteEnemies.push_back(enemy);
+					}
 
-				if (!eInList) {
-					deleteEnemies.push_back(enemy);
+					points++;
+					textPoints->content = to_string(points);
 				}
 
-				points++;
-				textPoints->content = to_string(points);
+				
 			}
 			if (projectile->isInRender() == false) {
 				bool pInList = std::find(deleteProjectiles.begin(),
