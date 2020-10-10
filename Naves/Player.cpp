@@ -51,5 +51,9 @@ void Player::recargar() {
 	numberOfShoots += 10;
 }
 
+void Player::addLife() {
+	life++;
+}
+
 
 

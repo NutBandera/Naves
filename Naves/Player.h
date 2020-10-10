@@ -18,6 +18,7 @@ public:
 	int numberOfShoots = 10;
 	void addShoot();
 	void recargar();
+	void addLife();
 	Projectile* shoot();
 	Audio* audioShoot;
 };

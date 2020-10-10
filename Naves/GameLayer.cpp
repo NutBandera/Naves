@@ -25,7 +25,7 @@ void GameLayer::init() {
 	enemies.push_back(new Enemy(300, 200, game));
 
 	recargadores.clear();
-	recargadores.push_back(new Recargador(300, 70, game));
+	monedas.clear();
 
 }
 
@@ -151,13 +151,42 @@ void GameLayer::update() {
 		int rX = (rand() % (400)) + 1 + 50;
 		int rY = (rand() % (300 - 60)) + 1 + 60;
 		recargadores.push_back(new Recargador(rX, rY, game));
-		newRecargadorTime  = 3000;
+		newRecargadorTime  = 500;
+	}
+
+	// Generar monedas
+	newMonedaTime--;
+	if (newMonedaTime <= 0) {
+		int rX = (rand() % (400)) + 1 + 50;
+		int rY = (rand() % (300 - 60)) + 1 + 60;
+		monedas.push_back(new Moneda(rX, rY, game));
+		newMonedaTime = 500;
 	}
 
 	player->update();
 	for (auto const& enemy : enemies) {
 		enemy->update();
 	}
+
+
+	list<Moneda*> deleteMonedas;
+	for (auto const& moneda : monedas) {
+		if (player->isOverlap(moneda)) {
+			player->addLife();
+			textLife->content = to_string(player->life);
+			bool mInList = std::find(deleteMonedas.begin(),
+				deleteMonedas.end(),
+				moneda) != deleteMonedas.end();
+			if (!mInList) {
+				deleteMonedas.push_back(moneda);
+			}
+		}
+	}
+
+	for (auto const& delMoneda : deleteMonedas) {
+		monedas.remove(delMoneda);
+	}
+	deleteMonedas.clear();
 
 	list<Enemy*> deleteEnemies; // lista enlazada
 	list<Projectile*> deleteProjectiles;
@@ -270,6 +299,10 @@ void GameLayer::draw() {
 
 	for (auto const& recargador : recargadores) {
 		recargador->draw();
+	}
+
+	for (auto const& moneda : monedas) {
+		moneda->draw();
 	}
 
 	for (auto const& enemy : enemies) {
