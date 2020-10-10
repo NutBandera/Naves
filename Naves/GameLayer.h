@@ -6,6 +6,7 @@
 #include "Projectile.h"
 #include "Text.h"
 #include "Audio.h"
+#include "Recargador.h"
 #include <list>
 
 class GameLayer : public Layer
@@ -18,6 +19,7 @@ public:
 	void draw() override;
 	void keysToControls(SDL_Event event);
 	int newEnemyTime = 0;
+	int newRecargadorTime = 0;
 
 	Player* player;
 	Background* background;
@@ -36,4 +38,5 @@ public:
 
 	list<Enemy*> enemies;
 	list<Projectile*> projectiles;
+	list<Recargador*> recargadores;
 };

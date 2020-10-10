@@ -24,6 +24,9 @@ void GameLayer::init() {
 	enemies.push_back(new Enemy(300, 50, game));
 	enemies.push_back(new Enemy(300, 200, game));
 
+	recargadores.clear();
+	recargadores.push_back(new Recargador(300, 70, game));
+
 }
 
 void GameLayer::processControls() {
@@ -142,6 +145,15 @@ void GameLayer::update() {
 		newEnemyTime = 110;
 	}
 
+	// Generar recargadores
+	newRecargadorTime--;
+	if (newRecargadorTime <= 0) {
+		int rX = (rand() % (400)) + 1 + 50;
+		int rY = (rand() % (300 - 60)) + 1 + 60;
+		recargadores.push_back(new Recargador(rX, rY, game));
+		newRecargadorTime  = 3000;
+	}
+
 	player->update();
 	for (auto const& enemy : enemies) {
 		enemy->update();
@@ -169,6 +181,24 @@ void GameLayer::update() {
 		}
 	}
 
+	list<Recargador*> deleteRecargadores;
+	for (auto const& recargador : recargadores) {
+		if (player->isOverlap(recargador)) {
+			player->recargar();
+			bool mInList = std::find(deleteRecargadores.begin(),
+				deleteRecargadores.end(),
+				recargador) != deleteRecargadores.end();
+			if (!mInList) {
+				deleteRecargadores.push_back(recargador);
+			}
+		}
+	}
+
+	for (auto const& delRecargador: deleteRecargadores) {
+		recargadores.remove(delRecargador);
+	}
+	deleteRecargadores.clear();
+
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
 			if (enemy->isOverlap(projectile)) {
@@ -191,6 +221,7 @@ void GameLayer::update() {
 
 					points++;
 					textPoints->content = to_string(points);
+					player->addShoot();
 				}
 
 				
@@ -237,9 +268,14 @@ void GameLayer::draw() {
 
 	player->draw();
 
+	for (auto const& recargador : recargadores) {
+		recargador->draw();
+	}
+
 	for (auto const& enemy : enemies) {
 		enemy->draw();
 	}
+
 
 	backgroundPoints->draw();
 	backgroundLife->draw();

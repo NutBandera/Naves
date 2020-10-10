@@ -15,6 +15,9 @@ public:
 	void takeLife();
 	bool isDead();
 	int life = 3;
+	int numberOfShoots = 10;
+	void addShoot();
+	void recargar();
 	Projectile* shoot();
 	Audio* audioShoot;
 };

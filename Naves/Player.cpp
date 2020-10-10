@@ -23,9 +23,10 @@ void Player::moveY(float axis) {
 }
 
 Projectile* Player::shoot() {
-	if (shootTime == 0) {
+	if (shootTime == 0 && numberOfShoots > 0) {
 		audioShoot->play();
 		shootTime = shootCadence;
+		numberOfShoots--;
 		return new Projectile(x, y, game);
 	}
 	else {
@@ -40,6 +41,14 @@ bool Player::isDead() {
 
 void Player::takeLife() {
 	life--;
+}
+
+void Player::addShoot() {
+	numberOfShoots++;
+}
+
+void Player::recargar() {
+	numberOfShoots += 10;
 }
 
 
