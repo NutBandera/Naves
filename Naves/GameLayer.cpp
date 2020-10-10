@@ -26,6 +26,7 @@ void GameLayer::init() {
 
 	recargadores.clear();
 	monedas.clear();
+	bombas.clear();
 
 }
 
@@ -163,6 +164,15 @@ void GameLayer::update() {
 		newMonedaTime = 500;
 	}
 
+	// Generar bombas
+	newBombaTime--;
+	if (newBombaTime <= 0) {
+		int rX = (rand() % (400)) + 1 + 50;
+		int rY = (rand() % (300 - 60)) + 1 + 60;
+		bombas.push_back(new Bomba(rX, rY, game));
+		newBombaTime = 1000;
+	}
+
 	player->update();
 	for (auto const& enemy : enemies) {
 		enemy->update();
@@ -189,6 +199,34 @@ void GameLayer::update() {
 	deleteMonedas.clear();
 
 	list<Enemy*> deleteEnemies; // lista enlazada
+	list<Bomba*> deleteBombas;
+	for (auto const& bomba : bombas) {
+		if (player->isOverlap(bomba)) {
+			bool mInList = std::find(deleteBombas.begin(),
+				deleteBombas.end(),
+				bomba) != deleteBombas.end();
+			if (!mInList) {
+				deleteBombas.push_back(bomba);
+			}
+			for (auto const& enemy : enemies) {
+				points++;
+				textPoints->content = to_string(points);
+				bool eInList = std::find(deleteEnemies.begin(),
+					deleteEnemies.end(),
+					enemy) != deleteEnemies.end();
+				if (!eInList) {
+					deleteEnemies.push_back(enemy);
+				}
+			}
+		}
+	}
+
+	for (auto const& delBomba : deleteBombas) {
+		bombas.remove(delBomba);
+	}
+	deleteMonedas.clear();
+
+
 	list<Projectile*> deleteProjectiles;
 
 	// Colisiones , Enemy - Player
@@ -303,6 +341,10 @@ void GameLayer::draw() {
 
 	for (auto const& moneda : monedas) {
 		moneda->draw();
+	}
+
+	for (auto const& bomba : bombas) {
+		bomba->draw();
 	}
 
 	for (auto const& enemy : enemies) {

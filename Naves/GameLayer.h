@@ -8,6 +8,7 @@
 #include "Audio.h"
 #include "Recargador.h"
 #include "Moneda.h"
+#include "Bomba.h"
 #include <list>
 
 class GameLayer : public Layer
@@ -22,6 +23,7 @@ public:
 	int newEnemyTime = 0;
 	int newRecargadorTime = 0;
 	int newMonedaTime = 0;
+	int newBombaTime = 0;
 
 	Player* player;
 	Background* background;
@@ -42,4 +44,5 @@ public:
 	list<Projectile*> projectiles;
 	list<Recargador*> recargadores;
 	list<Moneda*> monedas;
+	list<Bomba*> bombas;
 };
