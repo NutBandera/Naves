@@ -12,6 +12,9 @@ public:
 	void moveY(float axis);
 	int shootCadence = 20;
 	int shootTime = 0;
+	void takeLife();
+	bool isDead();
+	int life = 3;
 	Projectile* shoot();
 	Audio* audioShoot;
 };

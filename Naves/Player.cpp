@@ -34,4 +34,13 @@ Projectile* Player::shoot() {
 	
 }
 
+bool Player::isDead() {
+	return life == 0;
+}
+
+void Player::takeLife() {
+	life--;
+}
+
+
 

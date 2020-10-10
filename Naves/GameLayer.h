@@ -22,9 +22,11 @@ public:
 	Player* player;
 	Background* background;
 	Actor* backgroundPoints;
+	Actor * backgroundLife;
 	Audio* audioBackground;
 
 	Text* textPoints;
+	Text* textLife;
 	int points;
 
 

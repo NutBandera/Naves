@@ -12,9 +12,11 @@ void GameLayer::init() {
 	points = 0;
 	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.04, game);
 	textPoints->content = to_string(points);
+	textLife = new Text("3", WIDTH * 0.79, HEIGHT * 0.04, game);
 	player = new Player(50, 50, game);
 	background = new Background("res/fondo.png", WIDTH*0.5, HEIGHT*0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png", WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
+	backgroundLife = new Actor("res/corazon.png", WIDTH * 0.71, HEIGHT * 0.05, 44, 36, game);
 
 	projectiles.clear();
 
@@ -144,19 +146,28 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) {
 		enemy->update();
 	}
-	// Colisiones , Enemy - Player
-	for (auto const& enemy : enemies) {
-		if (player->isOverlap(enemy)) {
-			init();
-			return;
-		}
-	}
-	// Colisiones , Enemy - Projectile
 
 	list<Enemy*> deleteEnemies; // lista enlazada
 	list<Projectile*> deleteProjectiles;
 
-
+	// Colisiones , Enemy - Player
+	for (auto const& enemy : enemies) {
+		if (player->isOverlap(enemy)) {
+			player->takeLife();
+			textLife->content = to_string(player->life);
+			bool eInList = std::find(deleteEnemies.begin(),
+				deleteEnemies.end(),
+				enemy) != deleteEnemies.end();
+			if (!eInList) {
+				deleteEnemies.push_back(enemy);
+			}
+			if (player->isDead()) {
+				init();
+				return;
+			}
+			
+		}
+	}
 
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
@@ -231,7 +242,9 @@ void GameLayer::draw() {
 	}
 
 	backgroundPoints->draw();
+	backgroundLife->draw();
 	textPoints->draw();
+	textLife->draw();
 
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
