@@ -220,11 +220,10 @@ void GameLayer::update() {
 			}
 		}
 	}
-
 	for (auto const& delBomba : deleteBombas) {
 		bombas.remove(delBomba);
 	}
-	deleteMonedas.clear();
+	deleteBombas.clear();
 
 
 	list<Projectile*> deleteProjectiles;
